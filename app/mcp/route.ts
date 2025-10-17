@@ -31,25 +31,26 @@ function widgetMeta(widget: ContentWidget) {
 const handler = createMcpHandler(async (server) => {
   const html = await getAppsSdkCompatibleHtml(baseURL, "/");
 
-  const contentWidget: ContentWidget = {
-    id: "show_content",
-    title: "Show Content",
-    templateUri: "ui://widget/content-template.html",
-    invoking: "Loading content...",
-    invoked: "Content loaded",
+  const barberShopWidget: ContentWidget = {
+    id: "list_barber_shops",
+    title: "Barber Shop Booking",
+    templateUri: "ui://widget/barber-shops.html",
+    invoking: "Loading nearby barber shops...",
+    invoked: "Barber shops loaded",
     html: html,
-    description: "Displays the homepage content",
-    widgetDomain: "https://nextjs.org/docs",
+    description: "Browse and book appointments at nearby barber shops",
+    widgetDomain: baseURL,
   };
+
   server.registerResource(
-    "content-widget",
-    contentWidget.templateUri,
+    "barber-shop-widget",
+    barberShopWidget.templateUri,
     {
-      title: contentWidget.title,
-      description: contentWidget.description,
+      title: barberShopWidget.title,
+      description: barberShopWidget.description,
       mimeType: "text/html+skybridge",
       _meta: {
-        "openai/widgetDescription": contentWidget.description,
+        "openai/widgetDescription": barberShopWidget.description,
         "openai/widgetPrefersBorder": true,
       },
     },
@@ -58,11 +59,11 @@ const handler = createMcpHandler(async (server) => {
         {
           uri: uri.href,
           mimeType: "text/html+skybridge",
-          text: `<html>${contentWidget.html}</html>`,
+          text: `<html>${barberShopWidget.html}</html>`,
           _meta: {
-            "openai/widgetDescription": contentWidget.description,
+            "openai/widgetDescription": barberShopWidget.description,
             "openai/widgetPrefersBorder": true,
-            "openai/widgetDomain": contentWidget.widgetDomain,
+            "openai/widgetDomain": barberShopWidget.widgetDomain,
           },
         },
       ],
@@ -70,29 +71,26 @@ const handler = createMcpHandler(async (server) => {
   );
 
   server.registerTool(
-    contentWidget.id,
+    barberShopWidget.id,
     {
-      title: contentWidget.title,
+      title: barberShopWidget.title,
       description:
-        "Fetch and display the homepage content with the name of the user",
-      inputSchema: {
-        name: z.string().describe("The name of the user to display on the homepage"),
-      },
-      _meta: widgetMeta(contentWidget),
+        "Show nearby barber shops where users can view available time slots and book appointments. Useful when user asks to find barbers, book haircuts, or see available appointments.",
+      inputSchema: {},
+      _meta: widgetMeta(barberShopWidget),
     },
-    async ({ name }) => {
+    async () => {
       return {
         content: [
           {
             type: "text",
-            text: name,
+            text: "Here are the available barber shops nearby. Click on any shop to view available time slots and book an appointment.",
           },
         ],
         structuredContent: {
-          name: name,
           timestamp: new Date().toISOString(),
         },
-        _meta: widgetMeta(contentWidget),
+        _meta: widgetMeta(barberShopWidget),
       };
     }
   );
