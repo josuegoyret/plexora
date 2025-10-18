@@ -29,10 +29,8 @@ export default function Home() {
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
         <div className="space-y-2">
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-            Nearby Barber Shops
-          </h1>
-          <p className="text-muted-foreground">
+          <h1 className="openai-h1">Nearby Barber Shops</h1>
+          <p className="openai-body-regular text-muted-foreground">
             Browse available barber shops and book your next appointment
           </p>
         </div>
@@ -42,7 +40,7 @@ export default function Home() {
             <div className="flex items-center gap-3">
               <Info className="w-4 h-4" />
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-blue-900 dark:text-blue-100">
+                <p className="openai-body-small-regular text-blue-900 dark:text-blue-100">
                   This app is designed for ChatGPT. Open it from ChatGPT for the
                   best experience.
                 </p>
@@ -57,32 +55,36 @@ export default function Home() {
             <Card key={shop.id} className="flex flex-col">
               <CardHeader>
                 <div className="flex items-start justify-between gap-2">
-                  <CardTitle className="text-xl">{shop.name}</CardTitle>
+                  <CardTitle className="openai-h3">{shop.name}</CardTitle>
                   <Badge variant="secondary" className="shrink-0">
                     ⭐ {shop.rating}
                   </Badge>
                 </div>
-                <CardDescription className="flex items-start gap-1.5">
+                <CardDescription className="openai-body-small-regular flex items-start gap-1.5">
                   <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
                   <span>{shop.address}</span>
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex-1">
-                <p className="text-sm text-muted-foreground mb-3">
+                <p className="openai-body-small-regular text-muted-foreground mb-3">
                   {shop.description}
                 </p>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm">
-                    <span className="font-medium">Price Range:</span>
+                  <div className="openai-body-small-regular flex items-center gap-2">
+                    <span className="openai-body-small-emphasized">
+                      Price Range:
+                    </span>
                     <Badge variant="outline">{shop.priceRange}</Badge>
                   </div>
-                  <div className="text-sm">
-                    <span className="font-medium">Services:</span>
+                  <div className="openai-body-small-regular">
+                    <span className="openai-body-small-emphasized">
+                      Services:
+                    </span>
                     <div className="mt-1 flex flex-wrap gap-1">
                       {shop.services.slice(0, 3).map((service) => (
                         <span
                           key={service.id}
-                          className="text-xs text-muted-foreground"
+                          className="openai-caption-regular text-muted-foreground"
                         >
                           {service.name}
                           {service !==
