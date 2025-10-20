@@ -1,4 +1,4 @@
-export type BarberShop = {
+export type Shop = {
   id: string;
   name: string;
   address: string;
@@ -6,6 +6,8 @@ export type BarberShop = {
   priceRange: string;
   rating: number;
   services: Service[];
+  image: string;
+  nextAvailableSlots: string[];
 };
 
 export type Service = {
