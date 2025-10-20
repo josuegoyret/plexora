@@ -1,16 +1,13 @@
 "use client";
 
-import { useMaxHeight, useIsChatGptApp } from "./hooks";
-import { barberShops } from "@/lib/mock-data";
-import { Info } from "lucide-react";
-import CarouselShopCardItem from "@/components/card-detailed-shop";
 import Image from "next/image";
-import CarouselInlineShops from "@/components/carousel-inline-shops";
+import { useMaxHeight } from "../hooks";
+import { useIsChatGptApp } from "../hooks";
+import { Info } from "lucide-react";
 
-export default function Home() {
+const UserLayout = ({ children }: { children: React.ReactNode }) => {
   const maxHeight = useMaxHeight() ?? undefined;
   const isChatGptApp = useIsChatGptApp();
-
   return (
     <div
       className="w-full p-4 md:p-6 overflow-auto"
@@ -37,9 +34,10 @@ export default function Home() {
             </div>
           </div>
         )}
-
-        <CarouselInlineShops shops={barberShops} />
+        {children}
       </div>
     </div>
   );
-}
+};
+
+export default UserLayout;

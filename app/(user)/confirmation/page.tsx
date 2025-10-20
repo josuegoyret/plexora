@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { useMaxHeight } from "../hooks";
+import { useMaxHeight } from "../../hooks";
 import {
   Card,
   CardContent,

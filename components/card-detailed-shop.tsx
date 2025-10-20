@@ -44,7 +44,7 @@ const CarouselShopCardItem = ({ shop }: { shop: Shop }) => {
           {shop.nextAvailableSlots.map((slot) => (
             <Button key={slot}>{slot}</Button>
           ))}
-          <Link href={`/slots?shopId=${shop.id}`}>
+          <Link href={`/slots/${shop.id}`}>
             <Button variant="outline" className="size-11 p-0">
               <Plus className="size-4" />
             </Button>

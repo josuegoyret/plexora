@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { useMaxHeight } from "../hooks";
+import { useMaxHeight } from "../../hooks";
 import { getShopById, getSlotById } from "@/lib/mock-data";
 import {
   Card,
