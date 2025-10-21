@@ -43,25 +43,20 @@ export default function SlotsPage() {
     .map((dateStr) => new Date(dateStr));
 
   // Initialize selected date to first available date
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    availableDates[0]
-  );
+  const [date, setDate] = useState<Date | undefined>(availableDates[0]);
 
-  // Get slots for selected date
-  const selectedDateStr = selectedDate?.toISOString().split("T")[0];
+  const selectedDateStr = date?.toISOString().split("T")[0];
   const slotsForSelectedDate = selectedDateStr
     ? slotsByDate[selectedDateStr]?.filter((slot) => slot.available) || []
     : [];
 
-  // Disable dates that don't have available slots
-  const disabledDates = (date: Date) => {
+  const getDisabledDates = (date: Date) => {
     const dateStr = date.toISOString().split("T")[0];
     return !slotsByDate[dateStr]?.some((slot) => slot.available);
   };
 
   return (
-    <div className="max-w-6xl space-y-6">
-      {/* Header */}
+    <div className="space-y-6">
       <div className="space-y-4 w-full">
         <Link href="/">
           <Button variant="link" className="px-0">
@@ -73,7 +68,7 @@ export default function SlotsPage() {
         <div className="flex flex-col items-start justify-between gap-2 w-full">
           <div className="flex items-start justify-between gap-8 w-full">
             <div className="flex items-start gap-4">
-              <div className="relative size-12 rounded-md overflow-hidden">
+              <div className="relative size-12 rounded-xs overflow-hidden">
                 <Image
                   src={shop.image}
                   alt={shop.name}
@@ -97,36 +92,28 @@ export default function SlotsPage() {
           </p>
         </div>
       </div>
-
-      {/* Main Content: Calendar & Time Slots */}
       <div className="space-y-2">
         <div className="openai-h3">Select a Date & Time</div>
-
         <div className="flex flex-col md:flex-row gap-6">
           <Card className="flex-shrink-0">
-            <CardContent className="p-4">
+            <CardContent className="pt-4">
               <Calendar
                 mode="single"
-                selected={selectedDate}
-                onSelect={setSelectedDate}
-                disabled={disabledDates}
-                className="rounded-md"
-                captionLayout="dropdown"
-                fromDate={new Date()}
-                toDate={new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)}
+                selected={date}
+                onSelect={setDate}
+                disabled={getDisabledDates}
+                className="![&_button.rdp-day_button]:rounded-full"
               />
             </CardContent>
           </Card>
           <Card className="flex-1">
             <CardHeader>
               <div className="openai-h3">
-                {selectedDate
-                  ? formatSlotDate(selectedDateStr!)
-                  : "Select a date"}
+                {date ? formatSlotDate(selectedDateStr!) : "Select a date"}
               </div>
             </CardHeader>
             <CardContent>
-              {!selectedDate ? (
+              {!date ? (
                 <div className="text-center py-8 text-muted-foreground">
                   Please select a date from the calendar
                 </div>
