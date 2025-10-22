@@ -1,4 +1,4 @@
-import { BASE_URL, WIX_CLIENT_ID, WIX_CLIENT_SECRET } from "@/config/constants";
+import { BASE_URL, WIX_APP_ID, WIX_CLIENT_SECRET } from "@/config/constants";
 import { redirect } from "next/navigation";
 
 export async function GET(request: Request) {
@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     },
     body: JSON.stringify({
       grant_type: "authorization_code",
-      client_id: WIX_CLIENT_ID,
+      client_id: WIX_APP_ID,
       client_secret: WIX_CLIENT_SECRET,
       code,
     }),
