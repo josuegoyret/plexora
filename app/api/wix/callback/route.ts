@@ -23,6 +23,7 @@ export async function GET(request: Request) {
   });
 
   if (!response.ok) {
+    console.error(await response.text());
     return new Response("Failed to get access token", { status: 500 });
   }
 
