@@ -1,25 +1,15 @@
-"use client";
-
 import { connectWixSite } from "@/actions/wix";
+import { CredentialsCard } from "@/components/credentials-card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 const DashboardPage = () => {
-  const searchParams = useSearchParams();
-  const accessToken = searchParams.get("access_token");
-  const refreshToken = searchParams.get("refresh_token");
-
   return (
     <main>
       <Button onClick={connectWixSite}>Connect My Wix Site</Button>
-      {accessToken && refreshToken && (
-        <Card>
-          <CardContent>
-            <pre>{JSON.stringify({ accessToken, refreshToken }, null, 2)}</pre>
-          </CardContent>
-        </Card>
-      )}
+      <Suspense>
+        <CredentialsCard />
+      </Suspense>
     </main>
   );
 };
