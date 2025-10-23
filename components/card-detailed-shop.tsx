@@ -10,7 +10,7 @@ const CarouselShopCardItem = ({ shop }: { shop: Shop }) => {
   return (
     <Card
       key={shop.id}
-      className="w-[260px] flex flex-col gap-3 border-none shadow-none"
+      className="w-[260px] flex flex-col gap-3 border-none shadow-none bg-background"
     >
       <div className="relative w-full aspect-square overflow-hidden rounded-2xl">
         <Image src={shop.image} alt={shop.name} fill className="object-cover" />
@@ -28,7 +28,7 @@ const CarouselShopCardItem = ({ shop }: { shop: Shop }) => {
             <Badge variant="ghost">{shop.rating}</Badge>
           </div>
 
-          <p className="openai-body-small-regular text-muted line-clamp-2">
+          <p className="openai-body-small-regular text-muted-foreground line-clamp-2">
             {shop.description}
           </p>
         </div>
@@ -37,7 +37,7 @@ const CarouselShopCardItem = ({ shop }: { shop: Shop }) => {
           {shop.nextAvailableSlots.map((slot) => (
             <Button key={slot}>{slot}</Button>
           ))}
-          <Link href={`/slots/${shop.id}`}>
+          <Link href={`/services/${shop.id}`}>
             <Button variant="outline" className="size-11 p-0">
               <Plus className="size-4" />
             </Button>

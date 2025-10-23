@@ -14,6 +14,7 @@ const WIX_SITE_OWNER_REFRESH_TOKEN =
   "OAUTH2.eyJraWQiOiJkZ0x3cjNRMCIsImFsZyI6IkhTMjU2In0.eyJkYXRhIjoie1wiaWRcIjpcImQxZTEyM2IxLWMxYzMtNGE0YS1hMWZiLTM1ODI5YjUzYjA5OFwifSIsImlhdCI6MTc2MTE2MjIwMSwiZXhwIjoxODI0MjM0MjAxfQ.SLCpsa2qusNsWxBK1F29oZhGrPA9s9f21EDi9BZ_j3Q";
 
 export const connectWixSite = async () => {
+  return;
   const redirectUri = encodeURIComponent(`${BASE_URL}/api/wix/callback`);
   const wixAuthUrl = `https://www.wix.com/installer/install?appId=${WIX_APP_ID}&redirectUrl=${redirectUri}`;
   redirect(wixAuthUrl);
@@ -66,7 +67,7 @@ export const queryServices = async () => {
     }
   );
   if (!response.ok) {
-    console.error(await response.text());
+    console.error(await response.json());
     throw new Error("Failed to query services");
   }
   return (await response.json()) as QueryServicesResponse;
@@ -86,11 +87,21 @@ export const queryStaffMembers = async () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
+      body: JSON.stringify({
+        query: {
+          cursorPaging: {
+            cursor: null,
+            limit: 100,
+          },
+          fields: ["RESOURCE_DETAILS"],
+        },
+      }),
+      next: { revalidate: 60 * 60 * 24, tags: ["staff-members"] },
     }
   );
   if (!response.ok) {
-    console.error(response.statusText);
-    return null;
+    console.error(await response.statusText);
+    throw new Error("Failed to query staff members");
   }
   return (await response.json()) as QueryStaffMembersResponse;
 };

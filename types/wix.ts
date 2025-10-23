@@ -192,30 +192,6 @@ export type PagingMetadata = {
   hasNext: boolean;
 };
 
-export type QueryStaffMembersResponse = {
-  staffMembers: {
-    id: string;
-    name: string;
-    resourceId: string;
-    default: boolean;
-    revision: string;
-    createdDate: string;
-    updatedDate: string;
-    resource: {
-      id: string;
-      working_hours_schedules: {
-        id: string;
-        shared: boolean;
-      }[];
-      events_schedule: {
-        id: string;
-      };
-      uses_default_working_hours: boolean;
-    };
-  }[];
-  pagingMetadata: PagingMetadata;
-};
-
 export type BookingResponse = {
   booking: {
     id: string;
@@ -259,5 +235,43 @@ export type BookingResponse = {
     startDate: string;
     endDate: string;
     updatedDate: string;
+  };
+};
+
+export type StaffMember = {
+  id: string;
+  name: string;
+  email?: string;
+  mainMedia: {
+    image: {
+      id: string;
+      url: string;
+      height: number;
+      width: number;
+      filename: string;
+      sizeInBytes: string;
+    };
+  };
+  resourceId: string;
+  associatedWixIdentity?: {
+    identificationData: {
+      contactId: string;
+      identityType: string;
+      wixUserId: string;
+    };
+    connectionStatus: string;
+  };
+  default: boolean;
+  revision: string;
+  createdDate: string;
+  updatedDate: string;
+};
+
+export type QueryStaffMembersResponse = {
+  staffMembers: StaffMember[];
+  pagingMetadata: {
+    count: number;
+    cursors: {};
+    hasNext: boolean;
   };
 };

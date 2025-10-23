@@ -1,5 +1,3 @@
-"use client";
-
 import { barberShops } from "@/lib/mock-data";
 import CarouselInlineShops from "@/components/carousel-inline-shops";
 

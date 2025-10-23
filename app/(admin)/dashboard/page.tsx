@@ -6,7 +6,7 @@ import { Suspense } from "react";
 const DashboardPage = () => {
   return (
     <main>
-      <Button onClick={connectWixSite}>Connect My Wix Site</Button>
+      {/* <Button onClick={connectWixSite}>Connect My Wix Site</Button> */}
       <Suspense>
         <CredentialsCard />
       </Suspense>
