@@ -3,7 +3,11 @@
 import { BASE_URL, WIX_APP_ID, WIX_CLIENT_SECRET } from "@/config/constants";
 import { getWixClientForSiteOwner } from "@/lib/wix";
 import { redirect } from "next/navigation";
-import { QueryServicesResponse, QueryStaffMembersResponse } from "@/types/wix";
+import {
+  BookingResponse,
+  QueryServicesResponse,
+  QueryStaffMembersResponse,
+} from "@/types/wix";
 import { AvailabilityTimeSlotsResponse } from "@/lib/types";
 
 const WIX_SITE_OWNER_REFRESH_TOKEN =
@@ -130,4 +134,62 @@ export const getAvailabilityTimeSlotsForService = async (serviceId: string) => {
     return null;
   }
   return (await response.json()) as AvailabilityTimeSlotsResponse;
+};
+
+export const bookTimeSlot = async (
+  serviceId: string,
+  scheduleId: string,
+  startDate: string,
+  endDate: string,
+  locationId: string,
+  resourceId: string,
+  customer: { preferedName: string; email: string }
+) => {
+  const accessToken = await getWixSiteOwnerAccessToken();
+  if (!accessToken) {
+    throw new Error("Failed to get Wix site owner access token");
+  }
+
+  const response = await fetch("https://www.wixapis.com/bookings/v2/bookings", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({
+      booking: {
+        bookedEntity: {
+          slot: {
+            serviceId: serviceId,
+            scheduleId: scheduleId,
+            startDate: startDate,
+            endDate: endDate,
+            location: {
+              id: locationId,
+              locationType: "OWNER_BUSINESS",
+            },
+            resource: {
+              id: resourceId,
+            },
+          },
+        },
+        contactDetails: {
+          firstName: customer.preferedName,
+          email: customer.email,
+        },
+        selectedPaymentOption: "UNDEFINED",
+        totalParticipants: 1,
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    console.error("Booking failed:", errorData);
+    throw new Error(errorData.message || "Failed to book time slot");
+  }
+
+  const result = await response.json();
+  console.log("Booking successful:", result);
+  return result as BookingResponse;
 };

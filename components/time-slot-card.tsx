@@ -2,12 +2,19 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Clock, MapPin, Users } from "lucide-react";
 import { TimeSlot } from "@/lib/types";
+import BookingDialog from "@/components/booking-dialog";
 
 interface TimeSlotCardProps {
   timeSlot: TimeSlot;
+  serviceId: string;
+  resourceId: string;
 }
 
-const TimeSlotCard = ({ timeSlot }: TimeSlotCardProps) => {
+const TimeSlotCard = ({
+  timeSlot,
+  serviceId,
+  resourceId,
+}: TimeSlotCardProps) => {
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleTimeString("en-US", {
@@ -70,13 +77,19 @@ const TimeSlotCard = ({ timeSlot }: TimeSlotCardProps) => {
           </div>
         </div>
 
-        <Button
-          disabled={!isBookable}
-          className="w-full"
-          variant={isBookable ? "default" : "secondary"}
-        >
-          {isBookable ? "Book Now" : "Not Available"}
-        </Button>
+        {isBookable ? (
+          <BookingDialog
+            timeSlot={timeSlot}
+            serviceId={serviceId}
+            resourceId={resourceId}
+          >
+            <Button className="w-full">Book Now</Button>
+          </BookingDialog>
+        ) : (
+          <Button disabled className="w-full" variant="secondary">
+            Not Available
+          </Button>
+        )}
       </div>
     </Card>
   );

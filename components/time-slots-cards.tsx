@@ -3,9 +3,13 @@ import TimeSlotCard from "@/components/time-slot-card";
 
 interface TimeSlotsCardsProps {
   serviceId: string;
+  resourceId: string;
 }
 
-const TimeSlotsCards = async ({ serviceId }: TimeSlotsCardsProps) => {
+const TimeSlotsCards = async ({
+  serviceId,
+  resourceId,
+}: TimeSlotsCardsProps) => {
   const response = await getAvailabilityTimeSlotsForService(serviceId);
 
   if (!response || !response.timeSlots || response.timeSlots.length === 0) {
@@ -25,6 +29,8 @@ const TimeSlotsCards = async ({ serviceId }: TimeSlotsCardsProps) => {
         <TimeSlotCard
           key={`${timeSlot.localStartDate}-${index}`}
           timeSlot={timeSlot}
+          serviceId={serviceId}
+          resourceId={resourceId}
         />
       ))}
     </div>

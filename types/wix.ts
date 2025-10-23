@@ -215,3 +215,49 @@ export type QueryStaffMembersResponse = {
   }[];
   pagingMetadata: PagingMetadata;
 };
+
+export type BookingResponse = {
+  booking: {
+    id: string;
+    bookedEntity: {
+      slot: {
+        serviceId: string;
+        scheduleId: string;
+        startDate: string;
+        endDate: string;
+        timezone: string;
+        resource: {
+          id: string;
+          name: string;
+          scheduleId: string;
+        };
+        location: {
+          id: string;
+          name: string;
+          formattedAddress: string;
+          locationType: string;
+        };
+      };
+      title: string;
+      tags: string[];
+    };
+    contactDetails: {
+      firstName: string;
+      email: string;
+    };
+    additionalFields: [];
+    totalParticipants: number;
+    status: string;
+    paymentStatus: string;
+    selectedPaymentOption: string;
+    createdDate: string;
+    revision: string;
+    createdBy: {
+      identityType: string;
+      wixUserId: string;
+    };
+    startDate: string;
+    endDate: string;
+    updatedDate: string;
+  };
+};

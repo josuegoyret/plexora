@@ -58,7 +58,11 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
           </div>
         </div>
         <Button asChild>
-          <Link href={`/availability/${service.id}`}>View Availability</Link>
+          <Link
+            href={`/availability/${service.id}?staffMemberId=${service.staffMemberIds[0]}`}
+          >
+            View Availability
+          </Link>
         </Button>
       </div>
     </Card>

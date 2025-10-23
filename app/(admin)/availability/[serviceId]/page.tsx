@@ -4,10 +4,17 @@ import TimeSlotCardSkeleton from "@/components/time-slot-card-skeleton";
 
 interface AvailabilityPageProps {
   params: Promise<{ serviceId: string }>;
+  searchParams: Promise<{ staffMemberId: string }>;
 }
 
-const AvailabilityPage = async ({ params }: AvailabilityPageProps) => {
-  const { serviceId } = await params;
+const AvailabilityPage = async ({
+  params,
+  searchParams,
+}: AvailabilityPageProps) => {
+  const [{ serviceId }, { staffMemberId }] = await Promise.all([
+    params,
+    searchParams,
+  ]);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -30,7 +37,7 @@ const AvailabilityPage = async ({ params }: AvailabilityPageProps) => {
             </div>
           }
         >
-          <TimeSlotsCards serviceId={serviceId} />
+          <TimeSlotsCards serviceId={serviceId} resourceId={staffMemberId} />
         </Suspense>
       </div>
     </div>
