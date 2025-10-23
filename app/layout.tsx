@@ -39,6 +39,8 @@ function NextChatSDKBootstrap({ baseUrl }: { baseUrl: string }) {
       <script>
         {"(" +
           (() => {
+            const isChatGptApp = typeof window.openai !== "undefined";
+            if (!isChatGptApp) return;
             const baseUrl = window.innerBaseUrl;
             const htmlElement = document.documentElement;
             const observer = new MutationObserver((mutations) => {

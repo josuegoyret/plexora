@@ -1,4 +1,4 @@
-import { Shop, TimeSlot } from "./types";
+import { Shop, MockTimeSlot } from "./types";
 
 export const barberShops: Shop[] = [
   {
@@ -164,8 +164,8 @@ export const barberShops: Shop[] = [
 ];
 
 // Generate time slots for the next 7 days
-export function generateTimeSlots(shopId: string): TimeSlot[] {
-  const slots: TimeSlot[] = [];
+export function generateMockTimeSlots(shopId: string): MockTimeSlot[] {
+  const slots: MockTimeSlot[] = [];
   const today = new Date();
 
   // Generate slots for next 7 days
@@ -207,8 +207,8 @@ export function generateTimeSlots(shopId: string): TimeSlot[] {
 }
 
 // Get all slots for a specific shop
-export function getShopSlots(shopId: string): TimeSlot[] {
-  return generateTimeSlots(shopId);
+export function getShopSlots(shopId: string): MockTimeSlot[] {
+  return generateMockTimeSlots(shopId);
 }
 
 // Get a specific shop by ID
@@ -220,7 +220,7 @@ export function getShopById(id: string): Shop | undefined {
 export function getSlotById(
   slotId: string,
   shopId: string
-): TimeSlot | undefined {
+): MockTimeSlot | undefined {
   const slots = getShopSlots(shopId);
   return slots.find((slot) => slot.id === slotId);
 }

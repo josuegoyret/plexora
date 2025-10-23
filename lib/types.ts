@@ -17,7 +17,7 @@ export type Service = {
   duration: number; // in minutes
 };
 
-export type TimeSlot = {
+export type MockTimeSlot = {
   id: string;
   shopId: string;
   date: string; // ISO format
@@ -33,4 +33,38 @@ export type Booking = {
   customerName: string;
   customerEmail: string;
   timestamp: string;
+};
+
+export type TimeSlot = {
+  serviceId: string;
+  localStartDate: string;
+  localEndDate: string;
+  bookable: boolean;
+  location: {
+    id: string;
+    name: string;
+    formattedAddress: string;
+    locationType: string;
+  };
+  totalCapacity: number;
+  remainingCapacity: number;
+  bookingPolicyViolations: {
+    tooEarlyToBook: boolean;
+    tooLateToBook: boolean;
+    bookOnlineDisabled: boolean;
+  };
+  availableResources: [];
+  nestedTimeSlots: [];
+  scheduleId: string;
+};
+
+export type AvailabilityTimeSlotsResponse = {
+  timeSlots: TimeSlot[];
+  timeZone: string;
+  cursorPagingMetadata: {
+    cursors: {
+      next: string;
+    };
+    hasNext: boolean;
+  };
 };

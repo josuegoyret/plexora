@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import AdminNavigation from "@/components/admin-navigation";
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -16,6 +17,8 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             <h1 className="openai-body-regular text-muted">Plexora</h1>
           </div>
         </Link>
+
+        <AdminNavigation />
 
         {children}
       </div>
