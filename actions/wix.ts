@@ -177,6 +177,7 @@ export const bookTimeSlot = async (
           firstName: customer.preferedName,
           email: customer.email,
         },
+        status: "CONFIRMED",
         selectedPaymentOption: "UNDEFINED",
         totalParticipants: 1,
       },
