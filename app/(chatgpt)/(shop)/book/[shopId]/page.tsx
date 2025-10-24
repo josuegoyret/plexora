@@ -62,6 +62,7 @@ export default async function BookingPage({
           fallback={<Skeleton className="w-full max-w-[300px] h-[315px]" />}
         >
           <BookingForm
+            shopId={shopId}
             serviceId={serviceId}
             startDate={startDate}
             endDate={endDate}

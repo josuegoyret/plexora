@@ -11,12 +11,14 @@ export default async function AvailabilityPage({
   searchParams,
 }: {
   params: Promise<{ shopId: string }>;
-  searchParams: Promise<{ serviceId: string; staffMemberId: string }>;
+  searchParams: Promise<{
+    serviceId: string;
+    staffMemberId: string;
+    locationId: string;
+  }>;
 }) {
-  const [{ shopId }, { serviceId, staffMemberId }] = await Promise.all([
-    params,
-    searchParams,
-  ]);
+  const [{ shopId }, { serviceId, staffMemberId, locationId }] =
+    await Promise.all([params, searchParams]);
 
   const today = new Date();
 
@@ -47,6 +49,7 @@ export default async function AvailabilityPage({
           initialDate={today}
           staffMemberId={staffMemberId}
           serviceId={serviceId}
+          defaultLocationId={locationId}
         />
       </Suspense>
     </div>

@@ -5,11 +5,12 @@ import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { bookTimeSlot } from "@/actions/wix";
-import { toast } from "sonner";
-import { Field, FieldError, FieldGroup, FieldLabel } from "./ui/field";
+import { Field, FieldLabel } from "./ui/field";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Spinner } from "./ui/spinner";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 // Form validation schema
 const bookingFormSchema = z.object({
@@ -20,6 +21,7 @@ const bookingFormSchema = z.object({
 type BookingFormValues = z.infer<typeof bookingFormSchema>;
 
 const BookingForm = ({
+  shopId,
   serviceId,
   startDate,
   endDate,
@@ -27,6 +29,7 @@ const BookingForm = ({
   locationId,
   scheduleId,
 }: {
+  shopId: string;
   serviceId: string;
   startDate: string;
   endDate: string;
@@ -34,6 +37,9 @@ const BookingForm = ({
   locationId: string;
   scheduleId: string;
 }) => {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
   const form = useForm<BookingFormValues>({
     resolver: zodResolver(bookingFormSchema),
     defaultValues: {
@@ -44,6 +50,7 @@ const BookingForm = ({
 
   const onSubmit = async (data: BookingFormValues) => {
     const { firstName, email } = data;
+    setLoading(true);
 
     toast.promise(
       bookTimeSlot(
@@ -67,10 +74,12 @@ const BookingForm = ({
         },
         error: (error) => {
           console.error("Booking error:", error);
+          setLoading(false);
           return (
             error.message || "Failed to book appointment. Please try again."
           );
         },
+        position: "top-center",
       }
     );
   };
@@ -101,7 +110,7 @@ const BookingForm = ({
                   aria-invalid={fieldState.invalid}
                 />
 
-                <FieldError errors={[fieldState.error]} />
+                {/* <FieldError errors={[fieldState.error]} /> */}
               </Field>
             )}
           />
@@ -121,17 +130,11 @@ const BookingForm = ({
                   id="booking-form-customer-email"
                   aria-invalid={fieldState.invalid}
                 />
-                <FieldError errors={[fieldState.error]} />
+                {/* <FieldError errors={[fieldState.error]} /> */}
               </Field>
             )}
           />
-
-          <Button
-            type="submit"
-            className="w-full mt-auto"
-            disabled={form.formState.isSubmitting}
-          >
-            {form.formState.isSubmitting && <Spinner />}
+          <Button type="submit" className="w-full mt-auto" disabled={loading}>
             Confirm Booking
           </Button>
         </form>

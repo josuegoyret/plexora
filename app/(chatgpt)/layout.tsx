@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import ChatGptBanner from "@/components/chatgpt-banner";
 
 const ChatGptLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -18,8 +17,6 @@ const ChatGptLayout = ({ children }: { children: React.ReactNode }) => {
             <h1 className="openai-body-regular">Plexora</h1>
           </div>
         </Link>
-
-        <ChatGptBanner />
         {children}
       </div>
     </>

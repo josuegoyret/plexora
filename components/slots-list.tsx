@@ -16,12 +16,14 @@ const SlotsList = ({
   initialDate,
   serviceId,
   shopId,
+  defaultLocationId,
 }: {
   timeSlotsPromise: Promise<AvailabilityTimeSlotsResponse>;
   staffMemberId: string;
   initialDate: Date;
   serviceId: string;
   shopId: string;
+  defaultLocationId: string;
 }) => {
   const { timeSlots: initialTimeSlots } = use(timeSlotsPromise);
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>(initialTimeSlots);
@@ -93,7 +95,15 @@ const SlotsList = ({
                 slot.bookable ? (
                   <Button key={i} asChild className="w-full">
                     <Link
-                      href={`/book/${shopId}?serviceId=${slot.serviceId}&staffMemberId=${staffMemberId}&scheduleId=${slot.scheduleId}&locationId=${slot.location.id}&startDate=${slot.localStartDate}&endDate=${slot.localEndDate}`}
+                      href={`/book/${shopId}?serviceId=${
+                        slot.serviceId
+                      }&staffMemberId=${staffMemberId}&scheduleId=${
+                        slot.scheduleId
+                      }&locationId=${
+                        slot.location.id ?? defaultLocationId
+                      }&startDate=${slot.localStartDate}&endDate=${
+                        slot.localEndDate
+                      }`}
                     >
                       {formatSlotTime(new Date(slot.localStartDate))}
                     </Link>

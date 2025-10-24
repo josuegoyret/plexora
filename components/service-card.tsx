@@ -12,9 +12,12 @@ interface ServiceCardProps {
 }
 
 const ServiceCard = ({ service, shopId }: ServiceCardProps) => {
+  const serviceId = service.id;
+  const staffMemberId = service.staffMemberIds[0];
+  const locationId = service.locations[0].id;
   return (
     <Link
-      href={`/availability/${shopId}?serviceId=${service.id}&staffMemberId=${service.staffMemberIds[0]}`}
+      href={`/availability/${shopId}?serviceId=${serviceId}&staffMemberId=${staffMemberId}&locationId=${locationId}`}
     >
       <Card className="flex items-center justify-between gap-6 shadow-none p-4 rounded-sm">
         <div className="flex items-center gap-4">
