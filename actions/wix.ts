@@ -9,12 +9,12 @@ import {
   QueryStaffMembersResponse,
 } from "@/types/wix";
 import { AvailabilityTimeSlotsResponse } from "@/lib/types";
+import { toLocalISOString } from "@/utils/date";
 
 const WIX_SITE_OWNER_REFRESH_TOKEN =
   "OAUTH2.eyJraWQiOiJkZ0x3cjNRMCIsImFsZyI6IkhTMjU2In0.eyJkYXRhIjoie1wiaWRcIjpcImQxZTEyM2IxLWMxYzMtNGE0YS1hMWZiLTM1ODI5YjUzYjA5OFwifSIsImlhdCI6MTc2MTE2MjIwMSwiZXhwIjoxODI0MjM0MjAxfQ.SLCpsa2qusNsWxBK1F29oZhGrPA9s9f21EDi9BZ_j3Q";
 
 export const connectWixSite = async () => {
-  return;
   const redirectUri = encodeURIComponent(`${BASE_URL}/api/wix/callback`);
   const wixAuthUrl = `https://www.wix.com/installer/install?appId=${WIX_APP_ID}&redirectUrl=${redirectUri}`;
   redirect(wixAuthUrl);
@@ -106,21 +106,22 @@ export const queryStaffMembers = async () => {
   return (await response.json()) as QueryStaffMembersResponse;
 };
 
-export const getAvailabilityTimeSlotsForService = async (serviceId: string) => {
+export const getAvailabilityTimeSlotsForService = async (
+  serviceId: string,
+  date: Date
+) => {
   const accessToken = await getWixSiteOwnerAccessToken();
   if (!accessToken) {
     throw new Error("Failed to get Wix site owner access token");
   }
 
-  const now = new Date();
-  const start = new Date(now.setUTCHours(0, 0, 0))
-    .toISOString()
-    .replace("Z", "");
-  const endOfWeek = new Date(now);
-  endOfWeek.setDate(now.getDate() + (6 - now.getDay()));
-  const end = new Date(endOfWeek.setUTCHours(23, 59, 59))
-    .toISOString()
-    .replace("Z", "");
+  const start = new Date(date.setHours(0, 0, 0, 0));
+  const startString = toLocalISOString(start);
+  const end = new Date(date.setHours(23, 59, 59, 999));
+  const endString = toLocalISOString(end);
+
+  const fromLocalDate = startString;
+  const toLocalDate = endString;
 
   const response = await fetch(
     "https://www.wixapis.com/_api/service-availability/v2/time-slots",
@@ -132,17 +133,17 @@ export const getAvailabilityTimeSlotsForService = async (serviceId: string) => {
       },
       body: JSON.stringify({
         serviceId,
-        fromLocalDate: start,
-        toLocalDate: end,
+        fromLocalDate,
+        toLocalDate,
         cursorPaging: {
-          limit: 5,
+          limit: 30,
         },
       }),
     }
   );
   if (!response.ok) {
-    console.error(await response.json());
-    return null;
+    console.error(response.statusText);
+    throw new Error("Failed to get availability time slots");
   }
   return (await response.json()) as AvailabilityTimeSlotsResponse;
 };
@@ -154,7 +155,7 @@ export const bookTimeSlot = async (
   endDate: string,
   locationId: string,
   resourceId: string,
-  customer: { preferedName: string; email: string }
+  customer: { firstName: string; email: string }
 ) => {
   const accessToken = await getWixSiteOwnerAccessToken();
   if (!accessToken) {
@@ -185,7 +186,7 @@ export const bookTimeSlot = async (
           },
         },
         contactDetails: {
-          firstName: customer.preferedName,
+          firstName: customer.firstName,
           email: customer.email,
         },
         status: "CONFIRMED",

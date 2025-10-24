@@ -8,12 +8,13 @@ import Link from "next/link";
 
 interface ServiceCardProps {
   service: Service;
+  shopId: string;
 }
 
-const ServiceCard = ({ service }: ServiceCardProps) => {
+const ServiceCard = ({ service, shopId }: ServiceCardProps) => {
   return (
     <Link
-      href={`/availability/${service.id}?staffMemberId=${service.staffMemberIds[0]}`}
+      href={`/availability/${shopId}?serviceId=${service.id}&staffMemberId=${service.staffMemberIds[0]}`}
     >
       <Card className="flex items-center justify-between gap-6 shadow-none p-4 rounded-sm">
         <div className="flex items-center gap-4">

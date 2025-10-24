@@ -5,7 +5,7 @@ import { Info } from "lucide-react";
 
 const ChatGptBanner = () => {
   const isChatGptApp = useIsChatGptApp();
-  if (!isChatGptApp) return null;
+  if (isChatGptApp) return null;
   return (
     <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg px-4 py-3">
       <div className="flex items-center gap-3">

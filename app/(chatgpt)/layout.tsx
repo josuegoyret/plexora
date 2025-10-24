@@ -6,7 +6,7 @@ const ChatGptLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <div className="h-[490px] w-full fixed top-0 left-0 border border-red-500 -z-10 pointer-events-none" />
-      <div className="w-full max-w-6xl mx-auto p-2 space-y-4">
+      <div className="w-full max-w-6xl mx-auto p-2 space-y-3">
         <Link href="/" className="block">
           <div className="flex items-center gap-2">
             <Image

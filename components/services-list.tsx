@@ -9,9 +9,11 @@ import { TabsContent } from "@radix-ui/react-tabs";
 import ServiceCard from "./service-card";
 
 const ServicesList = ({
+  shopId,
   servicesPromise,
   staffMembersPromise,
 }: {
+  shopId: string;
   servicesPromise: Promise<QueryServicesResponse>;
   staffMembersPromise: Promise<QueryStaffMembersResponse>;
 }) => {
@@ -48,7 +50,11 @@ const ServicesList = ({
           <TabsContent value={staff.id} key={staff.id}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
               {staffServices.map((service) => (
-                <ServiceCard key={service.id} service={service} />
+                <ServiceCard
+                  key={service.id}
+                  service={service}
+                  shopId={shopId}
+                />
               ))}
             </div>
           </TabsContent>

@@ -8,7 +8,7 @@ const ServicesCards = async () => {
   return (
     <div className="flex flex-wrap gap-4">
       {sortedServices.map((service) => (
-        <ServiceCard key={service.id} service={service} />
+        <ServiceCard key={service.id} service={service} shopId={"1"} />
       ))}
     </div>
   );

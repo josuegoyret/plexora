@@ -27,8 +27,8 @@ const ServicesPage = async ({
 
   return (
     <div className="space-y-4">
-      <div className="space-y-1 w-full">
-        <Button variant="link" className="!px-0 h-auto" asChild>
+      <div className="space-y-2.5 w-full">
+        <Button variant="link" className="!px-0 h-auto" size="sm" asChild>
           <Link href={"/"}>
             <ArrowLeft className="w-4 h-4" />
             Back
@@ -64,6 +64,7 @@ const ServicesPage = async ({
         }
       >
         <ServicesList
+          shopId={shopId}
           servicesPromise={servicesPromise}
           staffMembersPromise={staffMembersPromise}
         />
