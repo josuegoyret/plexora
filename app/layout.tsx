@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import { baseURL } from "@/baseUrl";
@@ -20,15 +21,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <NextChatSDKBootstrap baseUrl={baseURL} />
-      </head>
-      <body className={`${roboto.variable} font-sans antialiased`}>
-        {children}
-        <Toaster />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <head>
+          <NextChatSDKBootstrap baseUrl={baseURL} />
+        </head>
+        <body className={`${roboto.variable} font-sans antialiased`}>
+          {children}
+          <Toaster />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
 
