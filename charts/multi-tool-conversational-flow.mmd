@@ -1,0 +1,49 @@
+sequenceDiagram
+    actor User
+    participant ChatGPT
+    participant Plexora MCP
+    participant Plexora DB
+    participant Wix API
+
+    Note over User,Wix API: Step 1: Discover Shops
+    User->>ChatGPT: "I want to book a slot at a nearby barber shop"
+    ChatGPT->>Plexora MCP: Call list_barber_shops tool
+    Plexora MCP->>Plexora DB: Fetch nearby barber shops
+    Plexora DB-->>Plexora MCP: Return shops list
+    Plexora MCP-->>ChatGPT: Return read-only widget (shops list)
+    ChatGPT->>User: Display shops widget
+    
+    Note over User,Wix API: Step 2: View Shop Services
+    User->>ChatGPT: "Show me the services for Gentlemen Point"
+    ChatGPT->>Plexora MCP: Call list_shop_services tool (shopId)
+    Plexora MCP->>Wix API: Fetch services & staff members
+    Wix API-->>Plexora MCP: Return services & staff data
+    Plexora MCP-->>ChatGPT: Return widget (services by staff)
+    ChatGPT->>User: Display services widget
+    
+    Note over User,Wix API: Step 3: View Available Slots
+    User->>ChatGPT: "Show me available slots for beard trim<br/>with Mario for tomorrow"
+    ChatGPT->>Plexora MCP: Call list_available_slots tool (serviceId, staffId, date)
+    Plexora MCP->>Wix API: Fetch available slots for date
+    Wix API-->>Plexora MCP: Return available slots
+    Plexora MCP-->>ChatGPT: Return interactive widget (slots + calendar)
+    ChatGPT->>User: Display slots widget
+    
+    Note over User,Wix API: Step 3b: Change Date (Optional)
+    alt User clicks calendar or prompts for different date
+        User->>ChatGPT: Click calendar OR "Show me slots for next week"
+        ChatGPT->>Plexora MCP: Call list_available_slots tool (serviceId, staffId, new date)
+        Plexora MCP->>Wix API: Fetch available slots for new date
+        Wix API-->>Plexora MCP: Return available slots
+        Plexora MCP-->>ChatGPT: Return updated widget
+        ChatGPT->>User: Display updated slots widget
+    end
+    
+    Note over User,Wix API: Step 4: Book Slot
+    User->>ChatGPT: "Book the 10AM slot<br/>Name: John Doe<br/>Email: johndoe@example.com"
+    ChatGPT->>Plexora MCP: Call book_slot tool (slotId, fullName, email)
+    Plexora MCP->>Wix API: Create booking
+    Wix API-->>Plexora MCP: Booking confirmation & ID
+    Plexora MCP-->>ChatGPT: Return confirmation widget (booking code)
+    ChatGPT->>User: Display confirmation widget
+

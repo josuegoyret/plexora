@@ -1,0 +1,47 @@
+sequenceDiagram
+    actor User
+    participant ChatGPT
+    participant Plexora MCP
+    participant Plexora DB
+    participant Wix API
+
+    Note over User,Wix API: Single Tool Call - Returns Interactive Widget
+    User->>ChatGPT: "I want to book a slot at a nearby barber shop"
+    ChatGPT->>Plexora MCP: Call booking_widget tool
+    Plexora MCP-->>ChatGPT: Return interactive widget (resource)
+    ChatGPT->>User: Display booking widget
+    
+    Note over User,Wix API: Widget UI Handles All Flow (clicks/input)
+    
+        activate Plexora MCP
+        Plexora MCP->>Plexora DB: Fetch nearby barber shops
+        Plexora DB-->>Plexora MCP: Return shops list
+        Plexora MCP->>User: Display shops in widget
+        
+        User->>Plexora MCP: Click on shop (Gentlemen Point)
+        Plexora MCP->>Wix API: Fetch services & staff members
+        Wix API-->>Plexora MCP: Return services & staff data
+        Plexora MCP->>User: Navigate to services page in widget
+        
+        User->>Plexora MCP: Click on service (Beard trim with Mario)
+        Plexora MCP->>Wix API: Fetch available slots (current day)
+        Wix API-->>Plexora MCP: Return available slots
+        Plexora MCP->>User: Navigate to slots page in widget
+        
+        loop Date changes via calendar
+            User->>Plexora MCP: Click calendar (change day)
+            Plexora MCP->>Wix API: Fetch available slots (new day)
+            Wix API-->>Plexora MCP: Return available slots
+            Plexora MCP->>User: Update slots in widget
+        end
+        
+        User->>Plexora MCP: Click time slot (10AM)
+        Plexora MCP->>User: Navigate to booking form in widget
+        
+        User->>Plexora MCP: Input info & submit form<br/>(Name: John Doe, Email: johndoe@example.com)
+        Plexora MCP->>Wix API: Create booking
+        Wix API-->>Plexora MCP: Booking confirmation & ID
+        Plexora MCP->>User: Display confirmation page in widget
+        deactivate Plexora MCP
+    
+
