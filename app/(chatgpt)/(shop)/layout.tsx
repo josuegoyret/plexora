@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const ChatGptLayout = ({ children }: { children: React.ReactNode }) => {
+const ShopLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <div className="h-[490px] w-full fixed top-0 left-0 border border-red-500 -z-10 pointer-events-none" />
@@ -23,4 +23,4 @@ const ChatGptLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default ChatGptLayout;
+export default ShopLayout;
