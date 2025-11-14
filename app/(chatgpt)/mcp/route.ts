@@ -1,6 +1,25 @@
 import { baseURL } from "@/baseUrl";
 import { createMcpHandler } from "mcp-handler";
 import { z } from "zod";
+import {
+  determineStep,
+  getStepMessage,
+  type InquiryData,
+} from "@/lib/inquiry-helpers";
+
+const inquiryInputSchema = z.object({
+  transactionType: z.enum(["purchase", "sale"]).optional(),
+  transactionAmount: z.number().optional(),
+  propertyAddress: z.string().optional(),
+  agreementSigned: z.boolean().optional(),
+  contactInfo: z
+    .object({
+      fullName: z.string().optional(),
+      email: z.string().optional(),
+      phone: z.string().optional(),
+    })
+    .optional(),
+});
 
 const getAppsSdkCompatibleHtml = async (baseUrl: string, path: string) => {
   const result = await fetch(`${baseUrl}${path}`);
@@ -116,18 +135,19 @@ const handler = createMcpHandler(async (server) => {
   );
 
   const propertyClosingServiceWidget: ContentWidget = {
-    id: "display_property_closing_service",
-    title: "Property Closing Service",
+    id: "display_property_closing_service_information",
+    title: "Property Closing Service Information",
     templateUri: "ui://widget/property-closing-service.html",
-    invoking: "Loading property closing service...",
-    invoked: "Property closing service loaded",
+    invoking: "Loading property closing service information...",
+    invoked: "Property closing service information loaded",
     html: propertyClosingServiceHtml,
-    description: "Use this when user asks for a property closing service.",
+    description:
+      "Use this when user asks information about property closing services.",
     widgetDomain: baseURL,
   };
 
   server.registerResource(
-    "property-closing-service-widget",
+    "property-closing-service-information-widget",
     propertyClosingServiceWidget.templateUri,
     {
       title: propertyClosingServiceWidget.title,
@@ -159,7 +179,8 @@ const handler = createMcpHandler(async (server) => {
     propertyClosingServiceWidget.id,
     {
       title: propertyClosingServiceWidget.title,
-      description: "Use this when user asks for a property closing service.",
+      description:
+        "Use this when user asks information about property closing services.",
       inputSchema: {},
       _meta: widgetMeta(propertyClosingServiceWidget),
     },
@@ -175,6 +196,93 @@ const handler = createMcpHandler(async (server) => {
           timestamp: new Date().toISOString(),
         },
         _meta: widgetMeta(propertyClosingServiceWidget),
+      };
+    }
+  );
+
+  // start_property_closing_inquiry tool
+  const startPropertyClosingInquiryHtml = await getAppsSdkCompatibleHtml(
+    baseURL,
+    "/property-closing/start-inquiry"
+  );
+
+  const startPropertyClosingInquiryWidget: ContentWidget = {
+    id: "start_property_closing_inquiry",
+    title: "Start Property Closing Inquiry",
+    templateUri: "ui://widget/start-property-closing-inquiry.html",
+    invoking: "Loading start property closing inquiry...",
+    invoked: "Start property closing inquiry loaded",
+    html: startPropertyClosingInquiryHtml,
+    description: "Use this when user asks to start a property closing inquiry.",
+    widgetDomain: baseURL,
+  };
+
+  server.registerResource(
+    "start-property-closing-inquiry-widget",
+    startPropertyClosingInquiryWidget.templateUri,
+    {
+      title: startPropertyClosingInquiryWidget.title,
+      description: startPropertyClosingInquiryWidget.description,
+      mimeType: "text/html+skybridge",
+      _meta: {
+        "openai/widgetDescription":
+          startPropertyClosingInquiryWidget.description,
+        "openai/widgetPrefersBorder": true,
+      },
+    },
+    async (uri) => ({
+      contents: [
+        {
+          uri: uri.href,
+          mimeType: "text/html+skybridge",
+          text: `<html>${startPropertyClosingInquiryWidget.html}</html>`,
+          _meta: {
+            "openai/widgetDescription":
+              startPropertyClosingInquiryWidget.description,
+            "openai/widgetPrefersBorder": true,
+            "openai/widgetDomain":
+              startPropertyClosingInquiryWidget.widgetDomain,
+          },
+        },
+      ],
+    })
+  );
+
+  server.registerTool(
+    startPropertyClosingInquiryWidget.id,
+    {
+      title: startPropertyClosingInquiryWidget.title,
+      description:
+        "Use this when user asks to start a property closing inquiry or provides information for a property closing inquiry. Accepts optional parameters to pre-fill fields based on conversation context.",
+      inputSchema: inquiryInputSchema as any,
+      _meta: widgetMeta(startPropertyClosingInquiryWidget),
+    },
+    async (extra: any) => {
+      const args = extra.params as z.infer<typeof inquiryInputSchema>;
+      const inquiryData: Partial<InquiryData> = {
+        transactionType: args?.transactionType,
+        transactionAmount: args?.transactionAmount,
+        propertyAddress: args?.propertyAddress,
+        agreementSigned: args?.agreementSigned,
+        contactInfo: args?.contactInfo,
+      };
+
+      const currentStep = determineStep(inquiryData);
+      const message = getStepMessage(currentStep, inquiryData);
+
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: message,
+          },
+        ],
+        structuredContent: {
+          step: currentStep,
+          inquiryData: inquiryData,
+          timestamp: new Date().toISOString(),
+        },
+        _meta: widgetMeta(startPropertyClosingInquiryWidget),
       };
     }
   );

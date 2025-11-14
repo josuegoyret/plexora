@@ -1,8 +1,36 @@
+"use client";
+
+import { useCallTool } from "@/app/hooks";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 import Image from "next/image";
+import { useState } from "react";
 
 const DisplayServicePage = () => {
+  const callTool = useCallTool();
+  const [loading, setLoading] = useState(false);
+
+  const handleStartInquiry = async () => {
+    setLoading(true);
+    try {
+      await callTool("start_property_closing_inquiry", {
+        transactionType: "purchase",
+        transactionAmount: 0,
+        propertyAddress: "",
+        agreementSigned: false,
+        contactInfo: {
+          fullName: "",
+          email: "",
+          phone: "",
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+    setLoading(false);
+  };
+
   return (
     <Card className="w-full md:w-[356px] flex flex-col gap-3 shadow-none p-2 pb-3">
       <div className="relative w-full aspect-[340/244] overflow-hidden rounded-2xl">
@@ -25,8 +53,14 @@ const DisplayServicePage = () => {
           </p>
         </div>
 
-        <Button className="w-full" variant="black">
-          {"Start your closing"}
+        <Button
+          className="w-full"
+          variant="black"
+          onClick={handleStartInquiry}
+          disabled={loading}
+        >
+          {loading && <Spinner />}
+          Start your closing
         </Button>
       </div>
     </Card>
